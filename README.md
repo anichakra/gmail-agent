@@ -84,7 +84,52 @@ A modern, sleek email agent powered by Composio Tool Router and Auth Links. Ask 
    DEBUG=true
    ENVIRONMENT=dev
    ```
+### API LIB
 
+Create a file called `api.ts` in the `app/lib` directory:
+```aiignore
+import axios from 'axios';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+const api = axios.create({
+  baseURL: `${API_URL}/api`,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+export interface UserConnectionStatus {
+  user_id: string;
+  email: string;
+  is_connected: boolean;
+  connection_id?: string;
+}
+
+export interface SignInRequest {
+  email: string;
+  callback_url?: string;
+}
+
+export interface SignInResponse {
+  connection_url: string;
+  connection_id: string;
+  user_id: string;
+}
+
+export const apiService = {
+  async getUserConnectionStatus(email: string): Promise<UserConnectionStatus> {
+    const response = await api.get<UserConnectionStatus>(`/auth/status/${encodeURIComponent(email)}`);
+    return response.data;
+  },
+
+  async createSignInLink(request: SignInRequest): Promise<SignInResponse> {
+    const response = await api.post<SignInResponse>('/auth/signin', request);
+    return response.data;
+  },
+};
+
+```
 ### Running the Application
 
 **Run everything together (Recommended)**
