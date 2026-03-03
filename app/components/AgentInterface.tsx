@@ -266,8 +266,8 @@ export default function AgentInterface({ userEmail }: AgentInterfaceProps) {
             {/* Heading */}
             <h1 className="text-3xl font-normal mb-3 text-foreground">
               {userProfile?.display_name 
-                ? `Good to see you, ${userProfile.display_name}.` 
-                : 'Good to see you.'}
+                ? `Good to see you, ${userProfile.display_name}!`
+                : 'Good to see you!'}
             </h1>
             
             {/* Subheading */}
