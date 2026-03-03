@@ -7,6 +7,15 @@ This repository is split into two independent sub-projects:
 
 Each project can be developed, built, and deployed independently. From the repo root, you can still build and run both together with Docker Compose or Make commands.
 
+## Purpose
+
+Gmail Agent is an AI-powered assistant for Gmail that lets users authenticate their inbox and manage email through natural language.  
+The project provides:
+
+- a web interface to chat with an email assistant
+- a backend API that connects to Gmail via Composio tools
+- end-to-end support for common inbox tasks like search, summarization, drafting, and replies
+
 ## Quick Start
 
 Without Docker:
