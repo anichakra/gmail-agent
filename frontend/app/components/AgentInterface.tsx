@@ -5,7 +5,7 @@ import { CornerDownLeft, Plus } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
-import { apiService, UserProfile } from '../lib/api';
+import { apiService, API_URL, UserProfile } from '../lib/api';
 
 interface Message {
   id: string;
@@ -151,7 +151,7 @@ export default function AgentInterface({ userEmail }: AgentInterfaceProps) {
     setMessages(prev => [...prev, assistantMessage]);
 
     try {
-      const response = await fetch('http://localhost:8000/api/agent/chat/stream', {
+      const response = await fetch(`${API_URL}/api/agent/chat/stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

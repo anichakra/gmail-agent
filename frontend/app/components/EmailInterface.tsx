@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Mail, Reply, Search, Archive, MoreVertical } from 'lucide-react';
+import { API_URL } from '../lib/api';
 
 interface Email {
   id: string;
@@ -32,7 +33,7 @@ export default function EmailInterface({ userEmail }: EmailInterfaceProps) {
   useEffect(() => {
     const fetchEmails = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/emails/${encodeURIComponent(userEmail)}?max_results=20`);
+        const response = await fetch(`${API_URL}/api/emails/${encodeURIComponent(userEmail)}?max_results=20`);
         if (!response.ok) {
           throw new Error('Failed to fetch emails');
         }

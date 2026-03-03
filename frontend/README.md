@@ -1,6 +1,6 @@
-# Backend (FastAPI)
+# Frontend (Next.js)
 
-This is the standalone backend API for Gmail Agent.
+This is the standalone frontend application for Gmail Agent.
 
 ## Quick Start
 
@@ -21,50 +21,35 @@ make up
 
 ## Stack
 
-- Python 3.12+
-- FastAPI
-- Composio SDK
-- LangChain / LangGraph
-- uv (package manager)
+- Next.js 16
+- React + TypeScript
+- Tailwind CSS
 
 ## Prerequisites
 
-- Python 3.12+
-- `uv`
+- Node.js 18+
+- npm
 
 ## Environment
 
-Create backend env file:
+Create local env file:
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 
-Required values include:
+Required variable:
 
-- `COMPOSIO_API_KEY`
-- `AUTH_CONFIG_ID`
-- one LLM provider key (`OPENAI_API_KEY` / `ANTHROPIC_API_KEY` / `GOOGLE_API_KEY`)
-- `MODEL_PROVIDER`, `MODEL_NAME`
+- `NEXT_PUBLIC_API_URL` (default: `http://localhost:8000`)
 
 ## Local Development
 
-Install dependencies:
-
 ```bash
-uv sync
+npm install
+npm run dev
 ```
 
-Run API:
-
-```bash
-uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-API endpoints:
-
-- `http://localhost:8000`
-- Docs: `http://localhost:8000/docs`
+App runs on `http://localhost:3000`.
 
 ## Run Full Stack Without Docker
 
@@ -84,18 +69,25 @@ cd backend && uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 cd frontend && npm run dev
 ```
 
+## Production Build
+
+```bash
+npm run build
+npm run start
+```
+
 ## Docker
 
 Build image:
 
 ```bash
-docker build -t gmail-agent-backend .
+docker build -t gmail-agent-frontend .
 ```
 
 Run container:
 
 ```bash
-docker run --rm -p 8000:8000 --env-file .env gmail-agent-backend
+docker run --rm -p 3000:3000 -e NEXT_PUBLIC_API_URL=http://localhost:8000 gmail-agent-frontend
 ```
 
 ## Run Full Stack With Docker

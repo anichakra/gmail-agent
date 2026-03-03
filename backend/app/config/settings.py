@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     allowed_origins: list[str] = ["http://localhost:3000"]
     
     class Config:
-        env_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), ".env")
+        env_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ".env")
         extra = "ignore"
 
 
