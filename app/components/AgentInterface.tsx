@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { CornerDownLeft, Plus } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 
 interface Message {
   id: string;
@@ -18,19 +20,32 @@ interface AgentInterfaceProps {
 // Pixelated Composio Logo Component
 const ComposioLogo = () => (
   <div className="relative w-16 h-16 bg-white" style={{ imageRendering: 'pixelated' }}>
-    <div className="absolute inset-0 grid grid-cols-5 grid-rows-5 gap-0">
-      {/* Top row */}
-      <div className="col-start-2 col-span-3 bg-white"></div>
-      {/* Second row */}
-      <div className="row-start-2 col-start-1 col-span-5 bg-white"></div>
-      {/* Third row - center square */}
-      <div className="row-start-3 col-start-1 bg-white"></div>
-      <div className="row-start-3 col-start-2 col-span-3 bg-black"></div>
-      <div className="row-start-3 col-start-5 bg-white"></div>
-      {/* Fourth row */}
-      <div className="row-start-4 col-start-1 col-span-5 bg-white"></div>
-      {/* Fifth row */}
-      <div className="row-start-5 col-start-2 col-span-3 bg-white"></div>
+    <div className="absolute inset-0 grid grid-cols-4 grid-rows-4 gap-0">
+      {/* Top left - Red */}
+      <div className="row-start-1 col-start-1 bg-red-500"></div>
+      <div className="row-start-1 col-start-2 bg-red-500"></div>
+      <div className="row-start-2 col-start-1 bg-red-500"></div>
+
+      {/* Top right - Blue */}
+      <div className="row-start-1 col-start-3 bg-blue-500"></div>
+      <div className="row-start-1 col-start-4 bg-blue-500"></div>
+      <div className="row-start-2 col-start-4 bg-blue-500"></div>
+
+      {/* Bottom left - Yellow */}
+      <div className="row-start-3 col-start-1 bg-yellow-400"></div>
+      <div className="row-start-4 col-start-1 bg-yellow-400"></div>
+      <div className="row-start-4 col-start-2 bg-yellow-400"></div>
+
+      {/* Bottom right - Green */}
+      <div className="row-start-4 col-start-3 bg-green-500"></div>
+      <div className="row-start-4 col-start-4 bg-green-500"></div>
+      <div className="row-start-3 col-start-4 bg-green-500"></div>
+
+      {/* Center - White */}
+      <div className="row-start-2 col-start-2 bg-white"></div>
+      <div className="row-start-2 col-start-3 bg-white"></div>
+      <div className="row-start-3 col-start-2 bg-white"></div>
+      <div className="row-start-3 col-start-3 bg-white"></div>
     </div>
   </div>
 );
@@ -80,11 +95,11 @@ export default function AgentInterface({ userEmail }: AgentInterfaceProps) {
   };
 
   const suggestedPrompts = [
-    "Find invoice from Stripe",
-    "Show unpaid invoices", 
-    "Show recent work feedback",
-    "Find all work meetings",
-    "What projects do i have coming up"
+    "How many emails arrived in last 7 days",
+    "Summarize my last email",
+    "Show subjects of all my unread emails from last 2 days",
+    "Draft a new email with subject 'Hello', body 'How are you!' to be send to ...",
+    "Is there any email came from Google yesterday?"
   ];
 
   const scrollToBottom = () => {
@@ -201,22 +216,22 @@ export default function AgentInterface({ userEmail }: AgentInterfaceProps) {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#1a1a1a] text-white">
+    <div className="flex flex-col h-screen bg-background text-foreground">
       {/* Header with New Chat and Sign Out buttons */}
       {messages.length > 0 && (
-        <div className="flex justify-between items-center p-4 border-b border-[#333333]">
-          <h2 className="text-lg font-medium text-white">Open Email Agent</h2>
+        <div className="flex justify-between items-center p-4 border-b border-border">
+          <h2 className="text-lg font-medium text-foreground">Gmail Agent</h2>
           <div className="flex items-center gap-3">
             <button
               onClick={startNewChat}
-              className="flex items-center gap-2 px-4 py-2 bg-[#2a2a2a] hover:bg-[#333333] rounded-lg text-sm transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-card hover:bg-accent rounded-lg text-sm transition-colors border border-border"
             >
               <Plus className="w-4 h-4" />
               New Chat
             </button>
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-[#2a2a2a] hover:bg-[#333333] rounded-lg text-sm transition-colors"
+              className="px-4 py-2 bg-card hover:bg-accent rounded-lg text-sm transition-colors border border-border"
             >
               Sign Out
             </button>
@@ -234,13 +249,13 @@ export default function AgentInterface({ userEmail }: AgentInterfaceProps) {
             </div>
             
             {/* Heading */}
-            <h1 className="text-3xl font-normal mb-3 text-white">
-              Ask anything about your emails
+            <h1 className="text-3xl font-normal mb-3 text-foreground">
+              Gmail Agent
             </h1>
             
             {/* Subheading */}
-            <p className="text-[#888888] text-base mb-12">
-              Ask to do or show anything using natural language
+            <p className="text-muted-foreground text-base mb-12">
+              Ask anything regarding your gmail inbox or email
             </p>
             
             {/* Suggested Prompts */}
@@ -249,7 +264,7 @@ export default function AgentInterface({ userEmail }: AgentInterfaceProps) {
                 <button
                   key={index}
                   onClick={() => handleSuggestedPrompt(prompt)}
-                  className="px-5 py-3 bg-[#2a2a2a] hover:bg-[#333333] rounded-full text-sm text-[#cccccc] transition-colors"
+                  className="px-5 py-3 bg-card hover:bg-accent border border-border rounded-full text-sm text-foreground transition-colors"
                 >
                   {prompt}
                 </button>
@@ -271,36 +286,37 @@ export default function AgentInterface({ userEmail }: AgentInterfaceProps) {
                   }`}
                 >
                   {message.role === 'assistant' ? (
-                    <div className="text-lg text-white leading-relaxed">
+                    <div className="text-lg text-foreground leading-relaxed prose prose-lg dark:prose-invert max-w-none break-words">
                       <ReactMarkdown 
+                        remarkPlugins={[remarkGfm, remarkBreaks]}
                         components={{
-                          p: ({ children }) => <p className="mb-4 last:mb-0 text-lg text-white leading-relaxed">{children}</p>,
-                          h1: ({ children }) => <h1 className="text-2xl font-bold mb-4 text-white">{children}</h1>,
-                          h2: ({ children }) => <h2 className="text-xl font-bold mb-3 text-white">{children}</h2>,
-                          h3: ({ children }) => <h3 className="text-lg font-bold mb-2 text-white">{children}</h3>,
-                          ul: ({ children }) => <ul className="list-disc list-inside mb-4 space-y-1 text-white">{children}</ul>,
-                          ol: ({ children }) => <ol className="list-decimal list-inside mb-4 space-y-1 text-white">{children}</ol>,
-                          li: ({ children }) => <li className="ml-2 text-white">{children}</li>,
+                          p: ({ children }) => <p className="mb-4 last:mb-0 text-lg text-foreground leading-relaxed">{children}</p>,
+                          h1: ({ children }) => <h1 className="text-2xl font-bold mb-4 text-foreground">{children}</h1>,
+                          h2: ({ children }) => <h2 className="text-xl font-bold mb-3 text-foreground">{children}</h2>,
+                          h3: ({ children }) => <h3 className="text-lg font-bold mb-2 text-foreground">{children}</h3>,
+                          ul: ({ children }) => <ul className="list-disc ml-6 mb-4 space-y-1 text-foreground">{children}</ul>,
+                          ol: ({ children }) => <ol className="list-decimal ml-6 mb-4 space-y-1 text-foreground">{children}</ol>,
+                          li: ({ children }) => <li className="text-foreground">{children}</li>,
                           code: ({ children, className }) => {
                             const isInline = !className;
                             return isInline ? (
-                              <code className="bg-[#333333] px-2 py-1 rounded text-sm font-mono text-white">{children}</code>
+                              <code className="bg-accent px-2 py-1 rounded text-sm font-mono text-foreground">{children}</code>
                             ) : (
-                              <code className="block bg-[#333333] p-3 rounded-lg text-sm font-mono overflow-x-auto text-white">{children}</code>
+                              <code className="block bg-accent p-3 rounded-lg text-sm font-mono overflow-x-auto text-foreground">{children}</code>
                             );
                           },
-                          pre: ({ children }) => <pre className="bg-[#333333] p-3 rounded-lg overflow-x-auto mb-4">{children}</pre>,
-                          blockquote: ({ children }) => <blockquote className="border-l-4 border-[#555555] pl-4 italic mb-4 text-white">{children}</blockquote>,
-                          strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
-                          em: ({ children }) => <em className="italic text-white">{children}</em>,
-                          a: ({ href, children }) => <a href={href} className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
+                          pre: ({ children }) => <pre className="bg-accent p-3 rounded-lg overflow-x-auto mb-4">{children}</pre>,
+                          blockquote: ({ children }) => <blockquote className="border-l-4 border-muted pl-4 italic mb-4 text-foreground">{children}</blockquote>,
+                          strong: ({ children }) => <strong className="font-bold text-foreground">{children}</strong>,
+                          em: ({ children }) => <em className="italic text-foreground">{children}</em>,
+                          a: ({ href, children }) => <a href={href} className="text-blue-500 hover:text-blue-400 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
                         }}
                       >
                         {message.content}
                       </ReactMarkdown>
                     </div>
                   ) : (
-                    <p className="text-lg text-white leading-relaxed whitespace-pre-wrap">
+                    <p className="text-lg text-foreground leading-relaxed whitespace-pre-wrap">
                       {message.content}
                     </p>
                   )}
@@ -323,21 +339,21 @@ export default function AgentInterface({ userEmail }: AgentInterfaceProps) {
       </div>
 
       {/* Input Area - Fixed at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a] to-transparent">
+      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background to-transparent">
         <div className="max-w-4xl mx-auto">
-          <div className="relative bg-[#2a2a2a] rounded-lg border border-[#3a3a3a] shadow-lg">
+          <div className="relative bg-card rounded-lg border border-border shadow-lg">
             <input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder=""
-              className="w-full px-5 py-4 pr-14 bg-transparent text-white placeholder-gray-500 focus:outline-none rounded-lg"
+              className="w-full px-5 py-4 pr-14 bg-transparent text-foreground placeholder-muted-foreground focus:outline-none rounded-lg"
             />
             <button
               onClick={handleSendMessage}
               disabled={!inputValue.trim() || isLoading}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-[#888888] hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <CornerDownLeft className="w-5 h-5" />
             </button>

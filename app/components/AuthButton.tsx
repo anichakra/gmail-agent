@@ -1,6 +1,8 @@
+
 'use client';
 
 import { useState } from 'react';
+import ThemeToggle from './ThemeToggle';
 
 interface AuthButtonProps {
   onSignIn: (email: string) => void;
@@ -10,19 +12,32 @@ interface AuthButtonProps {
 // Pixelated Composio Logo Component
 const ComposioLogo = () => (
   <div className="relative w-16 h-16 bg-white" style={{ imageRendering: 'pixelated' }}>
-    <div className="absolute inset-0 grid grid-cols-5 grid-rows-5 gap-0">
-      {/* Top row */}
-      <div className="col-start-2 col-span-3 bg-white"></div>
-      {/* Second row */}
-      <div className="row-start-2 col-start-1 col-span-5 bg-white"></div>
-      {/* Third row - center square */}
-      <div className="row-start-3 col-start-1 bg-white"></div>
-      <div className="row-start-3 col-start-2 col-span-3 bg-black"></div>
-      <div className="row-start-3 col-start-5 bg-white"></div>
-      {/* Fourth row */}
-      <div className="row-start-4 col-start-1 col-span-5 bg-white"></div>
-      {/* Fifth row */}
-      <div className="row-start-5 col-start-2 col-span-3 bg-white"></div>
+    <div className="absolute inset-0 grid grid-cols-4 grid-rows-4 gap-0">
+      {/* Top left - Red */}
+      <div className="row-start-1 col-start-1 bg-red-500"></div>
+      <div className="row-start-1 col-start-2 bg-red-500"></div>
+      <div className="row-start-2 col-start-1 bg-red-500"></div>
+      
+      {/* Top right - Blue */}
+      <div className="row-start-1 col-start-3 bg-blue-500"></div>
+      <div className="row-start-1 col-start-4 bg-blue-500"></div>
+      <div className="row-start-2 col-start-4 bg-blue-500"></div>
+      
+      {/* Bottom left - Yellow */}
+      <div className="row-start-3 col-start-1 bg-yellow-400"></div>
+      <div className="row-start-4 col-start-1 bg-yellow-400"></div>
+      <div className="row-start-4 col-start-2 bg-yellow-400"></div>
+      
+      {/* Bottom right - Green */}
+      <div className="row-start-4 col-start-3 bg-green-500"></div>
+      <div className="row-start-4 col-start-4 bg-green-500"></div>
+      <div className="row-start-3 col-start-4 bg-green-500"></div>
+      
+      {/* Center - White */}
+      <div className="row-start-2 col-start-2 bg-white"></div>
+      <div className="row-start-2 col-start-3 bg-white"></div>
+      <div className="row-start-3 col-start-2 bg-white"></div>
+      <div className="row-start-3 col-start-3 bg-white"></div>
     </div>
   </div>
 );
@@ -40,19 +55,22 @@ export default function AuthButton({ onSignIn, isLoading }: AuthButtonProps) {
 
   if (!showForm) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#1a1a1a]">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background relative">
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+        <ThemeToggle />
+      </div>
         <div className="max-w-md w-full px-8">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-8">
               <ComposioLogo />
             </div>
-            <h1 className="text-3xl font-normal text-white mb-3">Open Email Agent</h1>
-            <p className="text-[#888888] mb-8">Sign in with Gmail to get started</p>
+            <h1 className="text-3xl font-normal text-foreground mb-3">Open Email Agent</h1>
+            <p className="text-muted-foreground mb-8">Sign in with Gmail to get started</p>
           </div>
           
           <button
             onClick={() => setShowForm(true)}
-            className="w-full bg-[#2a2a2a] text-white py-4 px-6 rounded-lg hover:bg-[#333333] transition-colors"
+            className="w-full bg-card text-foreground py-4 px-6 rounded-lg hover:bg-accent border border-border transition-colors shadow-sm"
           >
             Sign in with Gmail
           </button>
@@ -62,14 +80,17 @@ export default function AuthButton({ onSignIn, isLoading }: AuthButtonProps) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#1a1a1a]">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background relative">
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+        <ThemeToggle />
+      </div>
       <div className="max-w-md w-full px-8">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-8">
             <ComposioLogo />
           </div>
-          <h1 className="text-3xl font-normal text-white mb-3">Enter Your Email</h1>
-          <p className="text-[#888888] mb-8">We&apos;ll create a secure connection to your Gmail account</p>
+          <h1 className="text-3xl font-normal text-foreground mb-3">Enter Your Email</h1>
+          <p className="text-muted-foreground mb-8">We&apos;ll create a secure connection to your Gmail account</p>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -79,7 +100,7 @@ export default function AuthButton({ onSignIn, isLoading }: AuthButtonProps) {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-5 py-4 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg focus:outline-none focus:border-[#555555] text-white placeholder-[#888888] transition-colors"
+              className="w-full px-5 py-4 bg-card border border-border rounded-lg focus:outline-none focus:border-blue-500 text-foreground placeholder-muted-foreground transition-colors"
               placeholder="Enter your Gmail address"
               required
             />
@@ -88,7 +109,7 @@ export default function AuthButton({ onSignIn, isLoading }: AuthButtonProps) {
           <button
             type="submit"
             disabled={isLoading || !email}
-            className="w-full bg-[#2a2a2a] text-white py-4 px-6 rounded-lg hover:bg-[#333333] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-card text-foreground py-4 px-6 rounded-lg hover:bg-accent border border-border transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
           >
             {isLoading ? 'Creating connection...' : 'Continue'}
           </button>
@@ -96,7 +117,7 @@ export default function AuthButton({ onSignIn, isLoading }: AuthButtonProps) {
           <button
             type="button"
             onClick={() => setShowForm(false)}
-            className="w-full text-[#888888] py-2 hover:text-white transition-colors"
+            className="w-full text-muted-foreground py-2 hover:text-foreground transition-colors"
           >
             Back
           </button>

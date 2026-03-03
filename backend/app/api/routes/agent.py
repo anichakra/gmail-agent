@@ -48,14 +48,15 @@ async def chat_with_agent_stream(request: ChatRequest):
                 response = str(response)
                 
             # Stream the response word by word
-            words = response.split()
+            # Using split(' ') instead of split() to preserve newlines and multiple spaces
+            words = response.split(' ')
             for i, word in enumerate(words):
                 chunk = {
                     "type": "content",
                     "content": word + (" " if i < len(words) - 1 else "")
                 }
                 yield f"data: {json.dumps(chunk)}\n\n"
-                await asyncio.sleep(0.05)  # Small delay for streaming effect
+                await asyncio.sleep(0.02)  # Reduced delay slightly for better feel
             
             # Send completion signal
             completion_chunk = {"type": "done"}

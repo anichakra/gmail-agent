@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import AuthButton from './components/AuthButton';
 import AgentInterface from './components/AgentInterface';
 import { apiService } from './lib/api';
+import ThemeToggle from './components/ThemeToggle';
 
 export default function Home() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -88,14 +89,21 @@ export default function Home() {
   }
 
   return (
-    <div className="relative">
-      {/* Sign Out Button */}
-      <button
-        onClick={handleSignOut}
-        className="fixed top-4 right-4 z-50 px-4 py-2 bg-[#2a2a2a] text-[#cccccc] text-sm rounded-full hover:bg-[#333333] transition-colors"
-      >
-        Sign Out
-      </button>
+    <div className="relative min-h-screen bg-background text-foreground">
+      {/* Theme Toggle - Centered at the top */}
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+        <ThemeToggle />
+      </div>
+
+      {/* Top Right Controls */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+        <button
+          onClick={handleSignOut}
+          className="px-4 py-2 bg-card text-muted-foreground text-sm rounded-full hover:bg-accent border border-border transition-colors"
+        >
+          Sign Out
+        </button>
+      </div>
 
       <AgentInterface userEmail={userEmail} />
     </div>

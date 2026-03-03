@@ -68,7 +68,7 @@ export default function EmailInterface({ userEmail }: EmailInterfaceProps) {
         const mockEmails: Email[] = [
           {
             id: '1',
-            subject: 'Welcome to Open Email Agent',
+            subject: 'Welcome to Gmail Agent',
             sender: 'System',
             preview: 'Your email agent is ready to use!',
             time: new Date().toLocaleTimeString(),
@@ -95,26 +95,26 @@ export default function EmailInterface({ userEmail }: EmailInterfaceProps) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-background">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex h-screen bg-background">
       {/* Email List Sidebar */}
-      <div className="w-1/3 border-r border-gray-200 flex flex-col">
+      <div className="w-1/3 border-r border-border flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b border-border">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-semibold">Inbox</h1>
+            <h1 className="text-xl font-semibold text-foreground">Inbox</h1>
             <div className="flex items-center space-x-2">
-              <Search className="w-5 h-5 text-gray-500" />
-              <MoreVertical className="w-5 h-5 text-gray-500" />
+              <Search className="w-5 h-5 text-muted-foreground" />
+              <MoreVertical className="w-5 h-5 text-muted-foreground" />
             </div>
           </div>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-muted-foreground">
             Signed in as: {userEmail}
           </div>
         </div>
@@ -125,26 +125,26 @@ export default function EmailInterface({ userEmail }: EmailInterfaceProps) {
             <div
               key={email.id}
               onClick={() => setSelectedEmail(email)}
-              className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
-                selectedEmail?.id === email.id ? 'bg-blue-50 border-l-4 border-l-blue-600' : ''
+              className={`p-4 border-b border-border cursor-pointer hover:bg-accent transition-colors ${
+                selectedEmail?.id === email.id ? 'bg-blue-500/10 border-l-4 border-l-blue-600' : ''
               }`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-2">
                     <div className={`w-2 h-2 rounded-full ${email.read ? 'bg-transparent' : 'bg-blue-600'}`} />
-                    <p className={`text-sm font-medium truncate ${email.read ? 'text-gray-700' : 'text-gray-900'}`}>
+                    <p className={`text-sm font-medium truncate ${email.read ? 'text-muted-foreground' : 'text-foreground'}`}>
                       {email.sender}
                     </p>
                   </div>
-                  <p className={`text-sm mt-1 ${email.read ? 'text-gray-600' : 'text-gray-900 font-medium'}`}>
+                  <p className={`text-sm mt-1 ${email.read ? 'text-muted-foreground' : 'text-foreground font-medium'}`}>
                     {email.subject}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1 truncate">
+                  <p className="text-xs text-muted-foreground mt-1 truncate">
                     {email.preview}
                   </p>
                 </div>
-                <div className="text-xs text-gray-500 ml-2">
+                <div className="text-xs text-muted-foreground ml-2">
                   {email.time}
                 </div>
               </div>
@@ -158,22 +158,22 @@ export default function EmailInterface({ userEmail }: EmailInterfaceProps) {
         {selectedEmail ? (
           <>
             {/* Email Header */}
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 border-b border-border">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">{selectedEmail.subject}</h2>
+                <h2 className="text-xl font-semibold text-foreground">{selectedEmail.subject}</h2>
                 <div className="flex items-center space-x-2">
-                  <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+                  <button className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded">
                     <Archive className="w-5 h-5" />
                   </button>
                   <button 
                     onClick={() => setShowReply(!showReply)}
-                    className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"
+                    className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded"
                   >
                     <Reply className="w-5 h-5" />
                   </button>
                 </div>
               </div>
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-muted-foreground">
                 <span className="font-medium">{selectedEmail.sender}</span>
                 <span className="mx-2">•</span>
                 <span>To: {selectedEmail.to || 'You'}</span>
@@ -184,13 +184,13 @@ export default function EmailInterface({ userEmail }: EmailInterfaceProps) {
             {/* Email Body */}
             <div className="flex-1 p-6 overflow-y-auto">
               <div className="prose max-w-none">
-                <div className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+                <div className="text-foreground leading-relaxed whitespace-pre-wrap">
                   {selectedEmail.messageText || selectedEmail.preview || 'No content available'}
                 </div>
                 {selectedEmail.attachmentList && selectedEmail.attachmentList.length > 0 && (
-                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                    <h4 className="font-medium text-gray-900 mb-2">Attachments ({selectedEmail.attachmentList.length})</h4>
-                    <div className="text-sm text-gray-600">
+                  <div className="mt-4 p-4 bg-accent rounded-lg">
+                    <h4 className="font-medium text-foreground mb-2">Attachments ({selectedEmail.attachmentList.length})</h4>
+                    <div className="text-sm text-muted-foreground">
                       {selectedEmail.attachmentList.length} attachment(s) available
                     </div>
                   </div>
@@ -200,10 +200,10 @@ export default function EmailInterface({ userEmail }: EmailInterfaceProps) {
 
             {/* Reply Section */}
             {showReply && (
-              <div className="border-t border-gray-200 p-6">
+              <div className="border-t border-border p-6">
                 <div className="mb-4">
-                  <h3 className="text-lg font-medium mb-2">Reply</h3>
-                  <div className="text-sm text-gray-600 mb-4">
+                  <h3 className="text-lg font-medium mb-2 text-foreground">Reply</h3>
+                  <div className="text-sm text-muted-foreground mb-4">
                     To: {selectedEmail.sender}
                   </div>
                 </div>
@@ -211,12 +211,12 @@ export default function EmailInterface({ userEmail }: EmailInterfaceProps) {
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
                   placeholder="Type your reply..."
-                  className="w-full h-32 p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full h-32 p-3 border border-border bg-card text-foreground rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <div className="flex justify-end space-x-3 mt-4">
                   <button
                     onClick={() => setShowReply(false)}
-                    className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                    className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Cancel
                   </button>
@@ -231,9 +231,9 @@ export default function EmailInterface({ userEmail }: EmailInterfaceProps) {
             )}
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-500">
+          <div className="flex-1 flex items-center justify-center text-muted-foreground">
             <div className="text-center">
-              <Mail className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <Mail className="w-12 h-12 mx-auto mb-4 opacity-20" />
               <p>Select an email to read</p>
             </div>
           </div>
