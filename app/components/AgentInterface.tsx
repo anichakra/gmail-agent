@@ -5,6 +5,7 @@ import { CornerDownLeft, Plus } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
+import { apiService, UserProfile } from '../lib/api';
 
 interface Message {
   id: string;
@@ -55,6 +56,7 @@ export default function AgentInterface({ userEmail }: AgentInterfaceProps) {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string>('');
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Conversation persistence
@@ -85,6 +87,19 @@ export default function AgentInterface({ userEmail }: AgentInterfaceProps) {
       localStorage.setItem(getStorageKey(userEmail), JSON.stringify(conversationData));
     }
   }, [messages, conversationId, userEmail]);
+
+  // Fetch user profile on component mount
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await apiService.getProfile(userEmail);
+        setUserProfile(profile);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+    fetchProfile();
+  }, [userEmail]);
 
   // New chat function
   const startNewChat = () => {
@@ -250,12 +265,14 @@ export default function AgentInterface({ userEmail }: AgentInterfaceProps) {
             
             {/* Heading */}
             <h1 className="text-3xl font-normal mb-3 text-foreground">
-              Gmail Agent
+              {userProfile?.display_name 
+                ? `Good to see you, ${userProfile.display_name}.` 
+                : 'Good to see you.'}
             </h1>
             
             {/* Subheading */}
             <p className="text-muted-foreground text-base mb-12">
-              Ask anything regarding your gmail inbox or email
+              How can I help with your inbox today?
             </p>
             
             {/* Suggested Prompts */}

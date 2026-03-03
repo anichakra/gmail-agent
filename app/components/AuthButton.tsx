@@ -64,7 +64,7 @@ export default function AuthButton({ onSignIn, isLoading }: AuthButtonProps) {
             <div className="flex justify-center mb-8">
               <ComposioLogo />
             </div>
-            <h1 className="text-3xl font-normal text-foreground mb-3">Open Email Agent</h1>
+            <h1 className="text-3xl font-normal text-foreground mb-3">Gmail Agent</h1>
             <p className="text-muted-foreground mb-8">Sign in with Gmail to get started</p>
           </div>
           

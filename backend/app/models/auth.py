@@ -32,3 +32,10 @@ class UserConnectionStatus(BaseModel):
     email: str
     is_connected: bool
     connection_id: Optional[str] = None
+
+
+class UserProfile(BaseModel):
+    """Model for user profile information."""
+    email: str
+    display_name: Optional[str] = None
+    picture_url: Optional[str] = None

@@ -70,6 +70,53 @@ class EmailToolsService:
             return result
         except Exception as e:
             raise Exception(f"Failed to get email by ID: {str(e)}")
+
+    def get_user_profile(self, user_id: str) -> Dict[str, Any]:
+        """Get user profile information."""
+        try:
+            # Attempt to get profile first
+            result = self.execute_gmail_action(
+                action="GMAIL_GET_PROFILE",
+                arguments={},
+                user_id=user_id
+            )
+            # If the response is success, return it.
+            if isinstance(result, dict):
+                # Check if we got a name, if not, try contacts as a fallback
+                data = result.get("data") or result.get("response_data") or result
+                if isinstance(data, dict):
+                    name = data.get("display_name") or data.get("displayName") or data.get("fullName") or data.get("name")
+                    if name:
+                        return result
+
+            # Fallback to GMAIL_GET_CONTACTS if profile didn't give a name
+            try:
+                print(f"GMAIL_GET_PROFILE did not provide a name for {user_id}, trying GMAIL_GET_CONTACTS...")
+                contacts_result = self.execute_gmail_action(
+                    action="GMAIL_GET_CONTACTS",
+                    arguments={"pageSize": 20},
+                    user_id=user_id
+                )
+                if isinstance(contacts_result, dict):
+                    # Combine results or just add contacts to the result
+                    result["contacts_data"] = contacts_result
+            except Exception as ce:
+                print(f"GMAIL_GET_CONTACTS fallback failed: {ce}")
+
+            return result
+        except Exception as e:
+            # If GMAIL_GET_PROFILE is not available, try to get it from contacts directly
+            print(f"Warning: GMAIL_GET_PROFILE failed for {user_id}: {e}. Trying GMAIL_GET_CONTACTS directly.")
+            try:
+                contacts_result = self.execute_gmail_action(
+                    action="GMAIL_GET_CONTACTS",
+                    arguments={"pageSize": 20},
+                    user_id=user_id
+                )
+                return {"email_address": user_id, "contacts_data": contacts_result}
+            except Exception as ce:
+                print(f"GMAIL_GET_CONTACTS direct attempt failed: {ce}")
+                return {"email_address": user_id}
     
     def list_threads(self, user_id: str, max_results: int = 10, query: Optional[str] = None) -> List[Dict[str, Any]]:
         """List email threads."""
